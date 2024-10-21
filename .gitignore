@@ -1,0 +1,10 @@
+# Compiled files
+build/*
+dist/*
+
+# Saves & configs
+games/*
+.env
+
+# Modules
+node_modules/*

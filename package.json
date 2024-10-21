@@ -1,0 +1,25 @@
+{
+  "name": "rpg-bot",
+  "version": "0.0.1",
+  "description": "A bot that allows to easily make roleplay games !",
+  "main": "main.js",
+  "scripts": {
+    "test": "node build/main.js",
+    "build": "tsc && node build/main.js"
+  },
+  "keywords": [
+    "discord.js"
+  ],
+  "author": "VELD-Dev",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.7.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5",
+    "fs": "^0.0.1-security"
+  }
+}

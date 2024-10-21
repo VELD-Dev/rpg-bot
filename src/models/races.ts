@@ -1,0 +1,21 @@
+export enum Race {
+    Human,
+    Elf,
+    HighElf,
+    DarkElf,
+    HalfElf,
+    MountainDwarf,
+    HillDwarf,
+    Dracheid,
+    Harpy,
+    HalfOrc,
+    Gnome,
+    Centaurus,
+    Siren,
+    // Enemy races
+    Goblin,
+    Orc,
+    Troll,
+    Dragon,
+    BloomingDeer,
+}

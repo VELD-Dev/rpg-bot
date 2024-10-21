@@ -1,0 +1,16 @@
+export enum Speciality {
+    Tank,
+    Assassin,
+    Mage,
+    BlackMage,
+    Paladin,
+    Archer,
+    SlyArcher,
+    ElementalArcher,
+    Barbare,
+    Bard,
+    Sorcerer,
+    Cleric,
+    Friar,
+    Druid,
+}
