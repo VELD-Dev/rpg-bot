@@ -22,7 +22,7 @@ export class GuildGames {
             var filename = path.basename(file, "json");
             if(filename.split("-")[1] == gid) {
                 var json: string = readFileSync(file, "utf8");
-                var gg = JSON.parse(json);
+                var gg = JSON.parse(json) as GuildGames;
                 return gg;
             }
         }
@@ -31,7 +31,7 @@ export class GuildGames {
     public GetByID(identifier: string): Game {
         return this.games.find(g => g.identifier === identifier);
     }
-    
+
     public GetByName(name: string): Game {
         return this.games.find(g => g.name === name);
     }
@@ -44,6 +44,6 @@ export class GuildGames {
     }
 
     public Save() {
-        writeFileSync(this.filename, JSON.stringify(this));
+        writeFileSync(this.filename, JSON.stringify(this, null, 2));
     }
 }

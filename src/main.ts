@@ -54,6 +54,8 @@ export class App {
             this.client.once(name, module.Execute.bind(null, this.client))
         });
 
+        GamesHandler.LoadGames();
+
         this.client.login(token).then(async () => {
             const rest = new REST({version: "10"}).setToken(token);
             var sc = this.commands.map(c => c.data);

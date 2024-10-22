@@ -1,9 +1,21 @@
 import { Collection } from "discord.js";
 import { Game } from "../models/game";
 import { GuildGames } from "../handlers/guildGames";
+import { readdirSync, readFileSync } from "fs";
+import { mdir } from "../main";
+import path from "path";
 
 export class GamesHandler {
     public static guilds: Array<GuildGames> = [];
+
+    public static LoadGames() {
+        var files = readdirSync(path.join(mdir, "games"))
+        files.forEach(file => {
+            var json = readFileSync(path.join(mdir, "games", path.basename(file)), "utf8");
+            var gg: GuildGames = JSON.parse(json) as GuildGames;
+            this.guilds.push(gg);
+        })
+    }
 
     public static AddGame(guildID: string, game: Game): void {
         if(this.guilds.find(guild => guild.serverID === guildID) !== undefined) {
@@ -27,7 +39,7 @@ export class GamesHandler {
         return game;
     }
 
-    public Save(guildID?: string): void {
+    public static Save(guildID?: string): void {
         if(guildID != undefined || guildID != null) {
             
         }

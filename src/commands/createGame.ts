@@ -39,10 +39,10 @@ export const createGameCommand: BotCommand = {
         }
 
         var embed = new EmbedBuilder()
-            .setTitle("New Game Created!")
+            .setTitle("Create a new game ?")
             .setAuthor({ name: interaction.user.displayName, iconURL: interaction.user.displayAvatarURL() })
             .setThumbnail(game.iconURL)
-            .setColor("Green")
+            .setColor("Blurple")
             .setDescription(`A new game have been created. You, ${interaction.user}, are the game master of this RPG. You have now a bunch of commands to set up your RPG!`)
             .setFields(
                 {
@@ -77,19 +77,42 @@ export const createGameCommand: BotCommand = {
         var buttonsRow = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(saveButton, cancelButton);
 
-        var r = await interaction.editReply({ embeds: [embed], components: [buttonsRow] })
+        var r = await interaction.editReply({ embeds: [embed], components: [buttonsRow] });
 
-        var collector = r.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, filter: i => i.user.id == game.gamemasterID })
+        var collector = r.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, filter: i => i.user.id == game.gamemasterID });
 
         collector.on('collect', async buttonInteraction => {
-            switch(buttonInteraction.id) {
-                case "create-game_save-button":
+            // Disable buttons on collect
+            buttonsRow.components.forEach(c => c.setDisabled(true))
 
+            var saveEmbed = new EmbedBuilder();
+
+            switch(buttonInteraction.customId) {
+                case "create-game_save-button":
+                    console.log(GamesHandler.guilds);
+                    GamesHandler.guilds.find(g => g.serverID == interaction.guildId).Save();
+                    saveEmbed.setTitle("Saved game !")
+                        .setDescription(`The game have been saved with ID \`${game.identifier}\`.`)
+                        .setColor("Blurple")
+                        .setFooter({ text: game.name, iconURL: game.iconURL });
+                    embed.setTitle("Game created !")
+                        .setColor("Green");
                 break;
                 case "create-game_cancel-button":
-                    
+                    var games = GamesHandler.guilds.find(g => g.serverID == interaction.guildId).games;
+                    games.indexOf(game);
+                    games.splice(games.indexOf(game), 1);
+                    saveEmbed.setTitle("Cancelled game creation.")
+                        .setDescription("The game creation have been cancelled.")
+                        .setColor("Red")
+                        .setFooter({ text: game.name, iconURL: game.iconURL });
+                    embed.setTitle("Game creation aborted.")
+                        .setColor("DarkerGrey");
                 break;
             }
-        })
+
+            interaction.editReply({ embeds: [embed], components: [buttonsRow] });
+            if(buttonInteraction.isRepliable()) buttonInteraction.reply({ embeds: [saveEmbed], ephemeral: true });
+        });
     }
 }
