@@ -8,6 +8,8 @@ import { interactionModule } from "./modules/interaction"
 import { createGameCommand } from "./commands/createGame"
 import { configDotenv } from "dotenv"
 import { GamesHandler } from "./handlers/gameHandler"
+import { registerPlayerCommand } from "./commands/registerPlayer"
+import { setPlayerStats } from "./commands/setPlayerStats"
 
 export const mdir = path.join(cwd(), "build")
 
@@ -45,13 +47,15 @@ export class App {
 
         this.commands = new Collection<string, BotCommand>();
         this.commands.set(createGameCommand.name, createGameCommand);
+        this.commands.set(registerPlayerCommand.name, registerPlayerCommand);
+        this.commands.set(setPlayerStats.name, setPlayerStats);
 
         this.modules = new Collection<Events, BotModule>();
         this.modules.set(Events.ClientReady, readyModule);
         this.modules.set(Events.InteractionCreate, interactionModule)
 
         this.modules.forEach((module, name) => {
-            this.client.once(name, module.Execute.bind(null, this.client))
+            this.client.on(name, module.Execute.bind(null, this.client))
         });
 
         GamesHandler.LoadGames();
@@ -65,7 +69,7 @@ export class App {
                     Routes.applicationCommands(this.client.user?.id ?? ""),
                     { body: sc }
                 );
-                console.log("Successfully reloaded slash commands.");
+                console.log(`Successfully reloaded ${sc.length} slash commands.`);
             } catch (e) {
                 console.log(e);
             }

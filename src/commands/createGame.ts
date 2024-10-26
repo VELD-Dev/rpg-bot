@@ -9,7 +9,7 @@ export const createGameCommand: BotCommand = {
     description: "Creates a new game of RPG.",
     category: "game",
     data: new SlashCommandBuilder()
-        .setContexts([InteractionContextType.Guild])
+        .setContexts(InteractionContextType.Guild)
         .setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
         .setName("create-game")
         .setDescription("Creates a new game of RPG.")
@@ -26,6 +26,8 @@ export const createGameCommand: BotCommand = {
     permissions: 0n,
     aliases: [],
     async Execute(client, interaction) {
+        await interaction.deferReply();
+
         var gamename: string = interaction.options.get("game-name").value as string;
         console.log("Creating game.");
         var nameHash: string = hash("sha1", gamename);
@@ -47,12 +49,12 @@ export const createGameCommand: BotCommand = {
             .setFields(
                 {
                     name: "Game Name",
-                    value: game.name,
+                    value: `***${game.name}***`,
                     inline: true
                 },
                 {
                     name: "Game ID",
-                    value: game.identifier,
+                    value: `\`${game.identifier}\``,
                     inline: true
                 },
                 {
@@ -70,7 +72,7 @@ export const createGameCommand: BotCommand = {
             .setStyle(ButtonStyle.Success);
         var cancelButton = new ButtonBuilder()
             .setLabel("Cancel")
-            .setEmoji("❌")
+            .setEmoji("❎")
             .setCustomId("create-game_cancel-button")
             .setStyle(ButtonStyle.Danger);
 
@@ -90,7 +92,8 @@ export const createGameCommand: BotCommand = {
             switch(buttonInteraction.customId) {
                 case "create-game_save-button":
                     console.log(GamesHandler.guilds);
-                    GamesHandler.guilds.find(g => g.serverID == interaction.guildId).Save();
+                    GamesHandler.Get(interaction.guildId).Save();
+                    GamesHandler.Get(interaction.guildId).currentGameIndex = GamesHandler.Get(interaction.guildId).games.indexOf(game);
                     saveEmbed.setTitle("Saved game !")
                         .setDescription(`The game have been saved with ID \`${game.identifier}\`.`)
                         .setColor("Blurple")
@@ -99,7 +102,7 @@ export const createGameCommand: BotCommand = {
                         .setColor("Green");
                 break;
                 case "create-game_cancel-button":
-                    var games = GamesHandler.guilds.find(g => g.serverID == interaction.guildId).games;
+                    var games = GamesHandler.Get(interaction.guildId).games;
                     games.indexOf(game);
                     games.splice(games.indexOf(game), 1);
                     saveEmbed.setTitle("Cancelled game creation.")

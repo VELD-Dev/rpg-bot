@@ -11,12 +11,12 @@ export const interactionModule: BotModule = {
         console.log("Interaction received.")
 
         if(i instanceof(CommandInteraction)) {
-            await i.deferReply();
             try {
                 await Bot.commands.find(c => c.name === i.commandName)?.Execute(client, i as CommandInteraction);
             } catch(e) {
                 console.log(e);
-                await i.editReply({ embeds: [ErrorEmbed(new Error(e as string), i as Interaction)] });
+                if(i.deferred || i.replied) await i.editReply({ embeds: [ErrorEmbed(new Error(e as string), i as Interaction)] });
+                else await i.reply({ embeds: [ErrorEmbed(new Error(e as string), i as Interaction)] });
             }
         }
     }

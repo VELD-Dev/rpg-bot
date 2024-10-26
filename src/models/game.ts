@@ -10,6 +10,7 @@ export class Game {
     players: Player[];
     currentFightIndex?: Fight;
     fightsHistory: Fight[] = [];
+    diceFacesAmount: number = 19;  // 19 means it can go from 1 to 20, etc...
 
     public constructor(gamemasterId: string, name: string, identifier: string) {
         this.gamemasterID = gamemasterId;
@@ -22,5 +23,9 @@ export class Game {
         if(this.players.find(p => p.id === player.id) == undefined) {
             this.players.push(player);
         }
+    }
+
+    public GetPlayer(id: string): Player {
+        return this.players.find(p => p.id === id);
     }
 }

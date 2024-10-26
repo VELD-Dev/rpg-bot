@@ -12,7 +12,10 @@ export class GamesHandler {
         var files = readdirSync(path.join(mdir, "games"))
         files.forEach(file => {
             var json = readFileSync(path.join(mdir, "games", path.basename(file)), "utf8");
-            var gg: GuildGames = JSON.parse(json) as GuildGames;
+            var gg: GuildGames = Object.setPrototypeOf(JSON.parse(json), GuildGames.prototype);
+            gg.games.forEach((g, i) => {
+                gg.games[i] = Object.setPrototypeOf(g, Game.prototype);
+            });
             this.guilds.push(gg);
         })
     }
@@ -25,6 +28,10 @@ export class GamesHandler {
         var gg = new GuildGames(guildID);
         gg.games.push(game);
         this.guilds.push(gg);
+    }
+
+    public static Get(guildID: string): GuildGames {
+        return this.guilds.find(g => g.serverID === guildID)
     }
 
     public static CreateGame(serverID: string, gameMasterID: string, gameName: string, gameIdentifier: string): Game {

@@ -1,4 +1,4 @@
-import { AnySelectMenuInteraction, APIButtonComponent, APIModalComponent, APISelectMenuComponent, ButtonBuilder, ButtonInteraction, Client, CommandInteraction,  ModalSubmitInteraction,  PermissionsBitField, RESTPostAPIApplicationCommandsJSONBody } from "discord.js";
+import { AnySelectMenuInteraction, APIButtonComponent, APIModalComponent, APISelectMenuComponent, ButtonBuilder, ButtonInteraction, Client, CommandInteraction,  ModalBuilder,  ModalSubmitInteraction,  PermissionsBitField, RESTPostAPIApplicationCommandsJSONBody } from "discord.js";
 
 export interface BotModule {
     name: string;
@@ -20,7 +20,7 @@ export interface BotButton extends BotModule {
 }
 
 export interface BotModal extends BotModule {
-    data: APIModalComponent;
+    data: ModalBuilder;
     Execute(client: Client, interaction?: ModalSubmitInteraction): Promise<void> | void;
 }
 
